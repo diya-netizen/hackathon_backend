@@ -21,7 +21,11 @@ export class UsersService {
     if (existingUser) {
       return { message: 'Email address already in use. Unable to create account.', success: false};
     }
-
+ 
+    const userCount = await this.userRepository.count();
+    if (userCount === 0) {
+    userData.role = 'Admin';  
+    } 
     const user = this.userRepository.create(userData);
     await this.userRepository.save(user);
     return { message: 'User created', success: true};
