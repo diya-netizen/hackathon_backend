@@ -16,7 +16,10 @@ export class AuthService {
     if (!user || user.password !== password) {
       return{ message: 'User Email or Password incorrect. Please try again!!', success: false };
     }
-
+    else if (user.status !== 'Active') 
+    {
+      return{ message: 'Your account is not active. Please contact admin.', success: false };
+    }
     
     return{ message: 'Login successful', success: true , user};
   }
