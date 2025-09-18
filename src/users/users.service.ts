@@ -28,7 +28,7 @@ export class UsersService {
     } 
     const user = this.userRepository.create(userData);
     await this.userRepository.save(user);
-    return { message: 'User created', success: true};
+    return { message: 'User created', success: true, id: user.id};
   }
 
   async delete(id: number) {

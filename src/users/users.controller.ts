@@ -8,7 +8,14 @@ import type { Request } from 'express';
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Post()
+    @Post('signup')
+    async signUp(@Body() data: any, @Req() req: Request) {
+        const ret = await this.usersService.create(data);
+        req.session.userId = ret?.id;
+        return ret;
+    }
+
+    @Post('createUser')
     createUser(@Body() data: any) {
         return this.usersService.create(data);
     }
