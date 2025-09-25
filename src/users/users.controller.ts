@@ -21,15 +21,22 @@ export class UsersController {
     }
 
     @Get()
-    async getUsers(@Query() query, @Req() req: Request,) {
-        if(!req.session.userId){
-            return { message: 'User not authenticated.', success: false};
+    async getUsers(
+    @Req() req: Request,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('field') field?: string,
+    @Query('search') search?: string,
+    ) {
+        if (!req.session.userId) {
+            return {
+            success: false,
+            message: 'User not authenticated.',
+            users: [],
+            };
         }
 
-        const page = parseInt(query.page, 10) || 1;
-        const limit = parseInt(query.limit, 10) || 10;
-
-        const users = await this.usersService.getUsers(page, limit);
+        const users = await this.usersService.getUsers(+page, +limit, field, search);
 
         return {
             success: true,
