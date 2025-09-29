@@ -31,6 +31,30 @@ export class UsersService {
     await this.userRepository.save(user);
     return { message: 'User created', success: true, id: user.id};
   }
+
+  async uploadPhoto(id: number, data:any){
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      return { message: 'User not found', success: false };
+    }
+    await this.userRepository.update(id, { photoBase64:data });
+    return {message: 'Photo upload successful', success: true};
+  }
+
+  async updateMyPassword(id: number, data:any){
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      return { message: 'User not found', success: false };
+    }
+    if (user.password===data.currentPassword){
+      const obj= await this.userRepository.update(id,{password:data.newPassword});
+      return {message: 'Password change successful', success: true};
+    }
+    else{
+      return {message: 'Current password is incorrect', success: false};
+    }
+
+  }
   
   async delete(id: number) {
     const user = await this.userRepository.findOne({ where: { id } });

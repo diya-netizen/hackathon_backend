@@ -20,6 +20,40 @@ export class UsersController {
         return this.usersService.create(data);
     }
 
+    @Post('uploadPhoto')
+    async uploadPhoto(@Req() req, @Body() body: { image: string }) {
+    if (!req.session.userId) {
+        return {
+            success: false,
+            message: 'User not found.',
+        };
+    }
+
+    const { image } = body;
+
+    if (!image) {
+      return { success: false, message: 'No image provided' };
+    }
+    
+    await this.usersService.uploadPhoto(req.session.userId, image);
+
+    return {
+      success: true,
+      message: 'Photo uploaded successfully',
+    };
+  }
+
+    @Post('updateMyPassword')
+    async updateMyPassword(@Body() data:any, @Req() req: Request){
+         if (!req.session.userId) {
+            return {
+            success: false,
+            message: 'User not found.',
+            };
+        }
+        return this.usersService.updateMyPassword(req.session.userId, data);
+        
+    }
     @Get()
     async getUsers(
     @Req() req: Request,
@@ -42,6 +76,17 @@ export class UsersController {
             success: true,
             ...users,
         };
+    }
+
+    @Delete('deleteMyUser')
+    async deleteMyUser(@Req() req: Request) {
+        if (!req.session.userId) {
+            return {
+            success: false,
+            message: 'User not found.',
+            };
+        }
+        return this.usersService.delete(req.session.userId);
     }
 
     @Delete(':id')

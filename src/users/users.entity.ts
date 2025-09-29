@@ -26,4 +26,7 @@ export class User {
 
   @Column({ default: 'User' })
   role: string;
+
+  @Column({ type: 'text', nullable: true })
+  photoBase64?: string;
 }
